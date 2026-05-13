@@ -3,10 +3,15 @@ import { useStore } from '@/context/StoreContext';
 import { formatNumber } from '@/lib/utils';
 
 export default function ProductCard({ product: p }) {
-  const { dispatch, showToast } = useStore();
+  const { state, dispatch, showToast } = useStore();
 
   const handleAddToCart = (e) => {
     e.stopPropagation();
+    if (!state.userAuthenticated) {
+      showToast('Please login to add items to cart.');
+      dispatch({ type: 'OPEN_USER_LOGIN' });
+      return;
+    }
     dispatch({ type: 'ADD_TO_CART', id: p.id });
     showToast('Added to cart! 🛒');
   };

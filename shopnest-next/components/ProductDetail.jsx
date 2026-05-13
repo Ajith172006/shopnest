@@ -9,12 +9,22 @@ export default function ProductDetail() {
   if (!p || state.detailProductId === null) return null;
 
   const handleAddToCart = () => {
+    if (!state.userAuthenticated) {
+      showToast('Please login to add items to cart.');
+      dispatch({ type: 'OPEN_USER_LOGIN' });
+      return;
+    }
     dispatch({ type: 'ADD_TO_CART', id: p.id });
     showToast('Added to cart! 🛒');
     dispatch({ type: 'HIDE_DETAIL' });
   };
 
   const handleBuyNow = () => {
+    if (!state.userAuthenticated) {
+      showToast('Please login to buy items.');
+      dispatch({ type: 'OPEN_USER_LOGIN' });
+      return;
+    }
     dispatch({ type: 'ADD_TO_CART', id: p.id });
     dispatch({ type: 'HIDE_DETAIL' });
     dispatch({ type: 'OPEN_CHECKOUT' });

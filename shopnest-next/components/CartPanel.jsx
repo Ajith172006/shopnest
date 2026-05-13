@@ -3,7 +3,7 @@ import { useStore } from '@/context/StoreContext';
 import { formatNumber } from '@/lib/utils';
 
 export default function CartPanel() {
-  const { state, dispatch, cartTotal } = useStore();
+  const { state, dispatch, cartTotal, showToast } = useStore();
   const { cart, cartOpen } = state;
 
   const closeAll = () => {
@@ -58,7 +58,15 @@ export default function CartPanel() {
             <div style={{ fontSize: '12px', color: '#26a541', marginBottom: '12px' }}>✓ Free Delivery</div>
             <button
               className="checkout-btn"
-              onClick={() => { dispatch({ type: 'CLOSE_CART' }); dispatch({ type: 'OPEN_CHECKOUT' }); }}
+              onClick={() => { 
+                if (!state.userAuthenticated) {
+                  showToast('Please login to proceed to checkout.');
+                  dispatch({ type: 'OPEN_USER_LOGIN' });
+                  return;
+                }
+                dispatch({ type: 'CLOSE_CART' }); 
+                dispatch({ type: 'OPEN_CHECKOUT' }); 
+              }}
             >
               Proceed to Checkout →
             </button>

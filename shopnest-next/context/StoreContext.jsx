@@ -138,21 +138,29 @@ export function StoreProvider({ children }) {
       if (session?.user && session.user.email) {
         try {
           const res = await fetch(`/api/user?email=${encodeURIComponent(session.user.email)}`);
+          
+          if (!res.ok) {
+            // API error (e.g. 404 user not found, or 500 db error), user needs to setup profile
+            dispatch({ type: 'OPEN_USER_LOGIN' });
+            return;
+          }
+
           const data = await res.json();
-          if (res.ok && data.success && data.data) {
+          if (data.success && data.data) {
             const p = data.data;
             if (p.phone && p.address) {
               dispatch({ type: 'HYDRATE_USER', profile: p });
             } else {
-              // Missing details, open modal to complete profile
               dispatch({ type: 'OPEN_USER_LOGIN' });
             }
           } else {
-            // User not found in DB, open modal to complete profile
             dispatch({ type: 'OPEN_USER_LOGIN' });
           }
         } catch (e) {
           console.error('Error fetching user profile:', e);
+          // Even if network fails or API crashes, force the profile setup modal to open
+          // so the user isn't stuck having to click "Login" again.
+          dispatch({ type: 'OPEN_USER_LOGIN' });
         }
       } else {
         dispatch({ type: 'USER_LOGOUT' });
