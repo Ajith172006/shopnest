@@ -9,6 +9,7 @@ export default function UserAuthModal() {
   // step 1: Google Login Button
   // step 3: Profile Setup (Phone, Age, Address)
   const [step, setStep] = useState(1);
+  const [checkingSession, setCheckingSession] = useState(true);
   const [phone, setPhone] = useState('');
   const [profile, setProfile] = useState({ name: '', age: '', address: '' });
   const [loading, setLoading] = useState(false);
@@ -16,6 +17,7 @@ export default function UserAuthModal() {
   // When the modal opens, if the user is already authenticated (but profile is missing), jump to step 3
   useEffect(() => {
     if (state.userLoginOpen) {
+      setCheckingSession(true);
       const checkSession = async () => {
         const { data: { session } } = await supabase.auth.getSession();
         if (session?.user) {
@@ -28,6 +30,7 @@ export default function UserAuthModal() {
         } else {
           setStep(1);
         }
+        setCheckingSession(false);
       };
       checkSession();
     }
@@ -116,30 +119,37 @@ export default function UserAuthModal() {
           🛍 BuyIt <span>Pro ✦</span>
         </div>
 
-        {/* STEP 1: GOOGLE LOGIN */}
-        {step === 1 && (
+        {checkingSession ? (
           <div className="ua-step">
-            <h2>Welcome to BuyIt</h2>
-            <p className="ua-sub">Sign in to continue your shopping journey</p>
-            
-            <button 
-              type="button" 
-              className="ua-btn google-btn" 
-              onClick={handleGoogleLogin} 
-              disabled={loading}
-              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', backgroundColor: '#fff', color: '#333', border: '1px solid #ccc', marginTop: '20px' }}
-            >
-              <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" style={{ width: '20px' }} />
-              {loading ? 'Connecting...' : 'Sign in with Google'}
-            </button>
-            
-            <p className="ua-terms">By continuing, you agree to BuyIt's Terms of Use and Privacy Policy.</p>
+            <h2>Loading...</h2>
+            <p className="ua-sub">Please wait...</p>
           </div>
-        )}
+        ) : (
+          <>
+            {/* STEP 1: GOOGLE LOGIN */}
+            {step === 1 && (
+              <div className="ua-step">
+                <h2>Welcome to BuyIt</h2>
+                <p className="ua-sub">Sign in to continue your shopping journey</p>
+                
+                <button 
+                  type="button" 
+                  className="ua-btn google-btn" 
+                  onClick={handleGoogleLogin} 
+                  disabled={loading}
+                  style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', backgroundColor: '#fff', color: '#333', border: '1px solid #ccc', marginTop: '20px' }}
+                >
+                  <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" style={{ width: '20px' }} />
+                  {loading ? 'Connecting...' : 'Sign in with Google'}
+                </button>
+                
+                <p className="ua-terms">By continuing, you agree to BuyIt's Terms of Use and Privacy Policy.</p>
+              </div>
+            )}
 
-        {/* STEP 3: PROFILE SETUP */}
-        {step === 3 && (
-          <div className="ua-step">
+            {/* STEP 3: PROFILE SETUP */}
+            {step === 3 && (
+              <div className="ua-step">
             <h2>Complete Profile</h2>
             <p className="ua-sub">Tell us a bit about yourself</p>
             <form onSubmit={handleSaveProfile} className="ua-profile-form">
@@ -189,6 +199,8 @@ export default function UserAuthModal() {
               </button>
             </form>
           </div>
+            )}
+          </>
         )}
       </div>
     </div>
