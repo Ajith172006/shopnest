@@ -14,20 +14,64 @@ export default function SellerPage() {
     password: '',
   });
   
-  const [products, setProducts] = useState([
-    { id: 1, name: 'Apple iPhone 15 Pro Max', price: 134900, stock: 45, sales: 120, status: 'Active' },
-    { id: 2, name: 'Sony WH-1000XM5 Headphones', price: 24990, stock: 88, sales: 85, status: 'Active' },
-    { id: 3, name: 'OnePlus 12R 5G 256GB', price: 39999, stock: 67, sales: 42, status: 'Active' },
-  ]);
-
-  const [orders, setOrders] = useState([
-    { id: 'ORD5501', customer: 'Amit Sharma', item: 'Apple iPhone 15 Pro Max', total: 134900, status: 'Pending' },
-    { id: 'ORD5502', customer: 'Pooja Verma', item: 'Sony WH-1000XM5', total: 24990, status: 'Shipped' },
-  ]);
+  const [products, setProducts] = useState([]);
+  const [orders, setOrders] = useState([]);
 
   const [toast, setToast] = useState('');
   const [newProduct, setNewProduct] = useState({ name: '', price: '', stock: '', category: 'Electronics' });
   const [showAddForm, setShowAddForm] = useState(false);
+
+  const fetchProducts = async () => {
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+      const res = await fetch(`${apiUrl}/api/products`);
+      if (res.ok) {
+        const json = await res.json();
+        if (json.success && json.data) {
+          const mapped = json.data.map(p => ({
+            id: p._id,
+            name: p.name,
+            price: p.price,
+            stock: p.stock,
+            sales: Array.isArray(p.reviews) ? p.reviews.length * 2 : (p.reviews || 0) * 2,
+            status: 'Active'
+          }));
+          setProducts(mapped);
+        }
+      }
+    } catch (err) {
+      console.error('Error fetching products', err);
+    }
+  };
+
+  const fetchOrders = async () => {
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+      const res = await fetch(`${apiUrl}/api/orders`);
+      if (res.ok) {
+        const json = await res.json();
+        if (json.success && json.data) {
+          const mapped = json.data.map(o => ({
+            id: o._id,
+            customer: o.shippingAddress?.name || o.userId?.name || 'Guest',
+            item: o.items.map(item => item.name).join(', '),
+            total: o.totalAmount,
+            status: o.orderStatus === 'pending' ? 'Pending' : o.orderStatus === 'shipped' ? 'Shipped' : o.orderStatus === 'delivered' ? 'Delivered' : 'Cancelled'
+          }));
+          setOrders(mapped);
+        }
+      }
+    } catch (err) {
+      console.error('Error fetching orders', err);
+    }
+  };
+
+  useEffect(() => {
+    if (isRegistered) {
+      fetchProducts();
+      fetchOrders();
+    }
+  }, [isRegistered]);
 
   const showToastMsg = (msg) => {
     setToast(msg);
@@ -49,29 +93,64 @@ export default function SellerPage() {
     setIsRegistered(true);
   };
 
-  const handleAddProduct = (e) => {
+  const handleAddProduct = async (e) => {
     e.preventDefault();
     if (!newProduct.name || !newProduct.price || !newProduct.stock) {
       showToastMsg('⚠️ Please fill out all product fields.');
       return;
     }
     const product = {
-      id: products.length + 1,
       name: newProduct.name,
+      brand: 'Generic',
+      category: newProduct.category || 'Electronics',
       price: parseFloat(newProduct.price),
+      originalPrice: parseFloat(newProduct.price) * 1.25,
+      discount: 20,
+      rating: 4.0,
+      image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&q=80',
       stock: parseInt(newProduct.stock),
-      sales: 0,
-      status: 'Active'
+      description: 'Quality product listed via Seller Central',
     };
-    setProducts(prev => [product, ...prev]);
-    setNewProduct({ name: '', price: '', stock: '', category: 'Electronics' });
-    setShowAddForm(false);
-    showToastMsg('✅ Product listed successfully!');
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+      const res = await fetch(`${apiUrl}/api/products`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(product)
+      });
+      const json = await res.json();
+      if (res.ok && json.success) {
+        showToastMsg('✅ Product listed successfully!');
+        fetchProducts();
+        setNewProduct({ name: '', price: '', stock: '', category: 'Electronics' });
+        setShowAddForm(false);
+      } else {
+        showToastMsg('Error listing product');
+      }
+    } catch (err) {
+      console.error(err);
+      showToastMsg('Error listing product');
+    }
   };
 
-  const handleShipOrder = (orderId) => {
-    setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status: 'Shipped' } : o));
-    showToastMsg(`📦 Order ${orderId} marked as Shipped!`);
+  const handleShipOrder = async (orderId) => {
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+      const res = await fetch(`${apiUrl}/api/orders/${orderId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderStatus: 'shipped' })
+      });
+      if (res.ok) {
+        setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status: 'Shipped' } : o));
+        showToastMsg(`📦 Order ${orderId} marked as Shipped!`);
+      } else {
+        showToastMsg('Error shipping order');
+      }
+    } catch (err) {
+      console.error(err);
+      showToastMsg('Error shipping order');
+    }
   };
 
   // Pre-fill demo credentials if clicked

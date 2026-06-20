@@ -10,6 +10,15 @@ export default function Topbar() {
     ? `HOME ${state.userProfile.address}`
     : 'Select delivery location';
 
+  const handleProfileClick = () => {
+    if (state.userAuthenticated) {
+      dispatch({ type: 'OPEN_USER_PROFILE' });
+    } else {
+      dispatch({ type: 'OPEN_USER_LOGIN' });
+    }
+    setMenuOpen(false);
+  };
+
   return (
     <>
       {/* --- DESKTOP TOPBAR --- */}
@@ -69,6 +78,15 @@ export default function Topbar() {
             <div className="ml-icon">🛍</div>
             <div className="ml-text">BuyIt</div>
           </div>
+          <button className="top-right-profile-btn mobile-profile-btn" onClick={handleProfileClick} title="My Account">
+            {state.userAuthenticated ? (
+              <div className="avatar-circle">
+                {state.userProfile?.name?.charAt(0).toUpperCase() || '👤'}
+              </div>
+            ) : (
+              <span className="profile-icon">👤</span>
+            )}
+          </button>
         </div>
         
         <div className="mobile-location-bar">

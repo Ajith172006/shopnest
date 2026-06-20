@@ -1,8 +1,9 @@
 'use client';
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
+import { useStore } from '@/context/StoreContext';
 
 import Topbar from '@/components/Topbar';
 import CategoryNav from '@/components/CategoryNav';
@@ -26,6 +27,12 @@ if (typeof window !== 'undefined') {
 
 export default function HomePage() {
   const container = useRef();
+  const { state } = useStore();
+
+  // Recalculate ScrollTrigger markers and offsets when dynamic products or active category/filters update
+  useEffect(() => {
+    ScrollTrigger.refresh();
+  }, [state.products, state.activeCategory, state.activeSearch, state.selectedBrands]);
 
   useGSAP(() => {
     // Parallax Hero background & fade out cards with scale effect
@@ -53,12 +60,11 @@ export default function HomePage() {
       }
     });
 
-    // Product grid staggered reveal with 3D-like scale and fade
-    gsap.from('.product-card', {
+    // Product grid reveal with 3D-like scale and fade
+    gsap.from('#product-grid', {
       y: 60,
       opacity: 0,
-      scale: 0.95,
-      stagger: 0.08,
+      scale: 0.98,
       duration: 0.8,
       ease: 'power3.out',
       scrollTrigger: {

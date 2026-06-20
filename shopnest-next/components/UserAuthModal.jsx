@@ -75,63 +75,6 @@ export default function UserAuthModal() {
     }
   };
 
-  // ── Demo / Guest Login Bypass ───────────────────────────────────────
-  const handleDemoLogin = async () => {
-    setLoading(true);
-    const guestEmail = 'guest@shopnest.com';
-    try {
-      // Check if guest user already exists in /api/user
-      const res = await fetch(`/api/user?email=${encodeURIComponent(guestEmail)}`);
-      let profileData = null;
-      if (res.ok) {
-        const json = await res.json();
-        if (json.success && json.data) {
-          profileData = json.data;
-        }
-      }
-
-      // If guest user doesn't exist, create it in MongoDB
-      if (!profileData) {
-        const createRes = await fetch('/api/user', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            email: guestEmail,
-            name: 'Demo Guest',
-            phone: '9876543210',
-            age: 28,
-            address: {
-              doorNo: 'Flat 101',
-              street: 'Flipkart Tech Park',
-              city: 'Bangalore',
-              district: 'Bangalore',
-              state: 'Karnataka',
-              pincode: '560001'
-            }
-          })
-        });
-        const createJson = await createRes.json();
-        if (createRes.ok && createJson.success) {
-          profileData = createJson.data;
-        }
-      }
-
-      if (profileData) {
-        if (typeof window !== 'undefined') {
-          localStorage.setItem('buyit_user_session', JSON.stringify(profileData));
-        }
-        dispatch({ type: 'HYDRATE_USER', profile: profileData });
-        showToast('Logged in as Guest User! 🛒');
-        closeAuth();
-      } else {
-        showToast('Failed to initialize demo guest login');
-      }
-    } catch (err) {
-      showToast('Demo login error. Please check database connection.');
-      console.error(err);
-    }
-    setLoading(false);
-  };
 
   // ── STEP 1.5: Email / Password Auth ─────────────────────────────────
   const handleEmailLogin = async (e) => {
@@ -346,15 +289,6 @@ export default function UserAuthModal() {
                   {loading ? 'Connecting...' : 'Sign in with Google'}
                 </button>
                 
-                <button 
-                  type="button" 
-                  onClick={handleDemoLogin} 
-                  disabled={loading}
-                  style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', backgroundColor: '#ff9f00', color: '#fff', border: 'none', marginTop: '12px', width: '100%', padding: '12px', borderRadius: '4px', cursor: 'pointer', fontWeight: 700, textTransform: 'uppercase', fontSize: '12px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}
-                >
-                  ⚡ Quick Demo Login (No Setup Required)
-                </button>
-
                 <div style={{ 
                   background: '#fff9db', 
                   border: '1px solid #ffe066', 
@@ -366,7 +300,7 @@ export default function UserAuthModal() {
                   lineHeight: 1.4,
                   textAlign: 'left'
                 }}>
-                  ⚠️ <strong>Google Auth Notice</strong>: If you see a "site url is improperly formatted" error, it means the Supabase auth redirect URL configuration is missing in the dashboard. Please use the <strong>⚡ Quick Demo Login</strong> or <strong>Email Login</strong> instead!
+                  ⚠️ <strong>Google Auth Notice</strong>: If you see a "site url is improperly formatted" error, it means the Supabase auth redirect URL configuration is missing in the dashboard. Please use <strong>Email Login</strong> instead!
                 </div>
                 
                 <div style={{ display: 'flex', alignItems: 'center', margin: '20px 0', color: '#aaa', fontSize: '12px' }}>

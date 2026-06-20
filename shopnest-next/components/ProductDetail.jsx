@@ -1,7 +1,8 @@
 'use client';
 import { useStore } from '@/context/StoreContext';
 import { formatNumber } from '@/lib/utils';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import ProductCard from './ProductCard';
 
 
 
@@ -10,10 +11,21 @@ export default function ProductDetail() {
   const [reviewText, setReviewText] = useState('');
   const [reviewRating, setReviewRating] = useState(5);
   const [submittingReview, setSubmittingReview] = useState(false);
+  const detailRef = useRef();
 
   const p = state.products.find(x => x.id === state.detailProductId);
 
+  useEffect(() => {
+    if (detailRef.current) {
+      detailRef.current.scrollTo(0, 0);
+    }
+  }, [state.detailProductId]);
+
   if (!p || state.detailProductId === null) return null;
+
+  const relatedProducts = state.products
+    .filter(prod => prod.category === p.category && prod.id !== p.id)
+    .slice(0, 4);
 
   const handleAddToCart = () => {
     if (!state.userAuthenticated) {
@@ -100,7 +112,7 @@ export default function ProductDetail() {
   };
 
   return (
-    <div id="detail-view">
+    <div id="detail-view" ref={detailRef}>
       <div className="detail-top">
         <button className="back-btn" onClick={() => dispatch({ type: 'HIDE_DETAIL' })}>← Back</button>
         <span style={{ fontSize: '15px', fontWeight: 500 }}>Product Details</span>
@@ -198,6 +210,7 @@ export default function ProductDetail() {
                 </div>
               );
             })()}
+          </div>
 
             {state.userAuthenticated && (
               <form onSubmit={handleSubmitReview} style={{ marginTop: '24px', background: '#fff', padding: '16px', borderRadius: '12px', border: '1px solid #e5e7eb' }}>
@@ -218,15 +231,28 @@ export default function ProductDetail() {
                   placeholder="Share your experience with this product..."
                   rows={3}
                   style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ccc', fontSize: '13px', fontFamily: 'Inter', outline: 'none', marginBottom: '10px' }}
-                />
+                ></textarea>
                 <button type="submit" disabled={submittingReview} style={{ background: '#2563eb', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: '8px', fontSize: '13px', fontWeight: 600, cursor: 'pointer' }}>
                   {submittingReview ? 'Submitting...' : 'Submit Review'}
                 </button>
               </form>
             )}
+      </div>
+    </div>
+      
+      {/* Related Products Section */}
+      {relatedProducts.length > 0 && (
+        <div className="related-products-section" style={{ maxWidth: '1200px', margin: '40px auto', padding: '0 24px 50px' }}>
+          <h2 style={{ fontSize: '20px', fontWeight: 800, marginBottom: '20px', color: '#1e1b4b', borderBottom: '2px solid #e2e8f0', paddingBottom: '10px' }}>
+            Similar Products You Might Like 🛍️
+          </h2>
+          <div id="product-grid">
+            {relatedProducts.map(prod => (
+              <ProductCard key={prod.id} product={prod} />
+            ))}
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
