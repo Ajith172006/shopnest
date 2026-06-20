@@ -196,7 +196,7 @@ export default function CheckoutModal() {
     // Process Mock Order placement in backend
     try {
       const order = {
-        userId: state.userProfile?._id || null,
+        userId: state.userProfile?.id || state.userProfile?._id || null,
         items: state.cart.map(item => ({
           productId: item.id,
           name: item.name,
@@ -245,7 +245,7 @@ export default function CheckoutModal() {
       
       <div id="checkout-modal" className="open" style={{ width: '720px', padding: '24px', maxHeight: '95vh', overflowY: 'auto', borderRadius: '8px' }}>
         <h2 style={{ fontSize: '20px', borderBottom: '1px solid #e0e0e0', paddingBottom: '12px', marginBottom: '16px' }}>
-          🛒 Flipkart Checkout
+          🛒 BuyIT Checkout
         </h2>
 
         {/* STEP 1: DELIVERY ADDRESS */}

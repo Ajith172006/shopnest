@@ -12,6 +12,7 @@ const { connectDB, disconnectDB } = require('./config/mongodb');
 
 const sampleProducts = [
   {
+    _id: '65d1a2b3c4d5e6f7a8b9c001',
     name: 'Apple iPhone 15 Pro Max 256GB',
     brand: 'Apple',
     description: 'A17 Pro chip, 48MP camera system, titanium design',
@@ -26,6 +27,7 @@ const sampleProducts = [
     isFeatured: true,
   },
   {
+    _id: '65d1a2b3c4d5e6f7a8b9c002',
     name: 'Samsung 65" 4K QLED Smart TV',
     brand: 'Samsung',
     description: '120Hz refresh rate, Quantum HDR, Tizen OS',
@@ -40,6 +42,7 @@ const sampleProducts = [
     isFeatured: true,
   },
   {
+    _id: '65d1a2b3c4d5e6f7a8b9c003',
     name: 'Sony WH-1000XM5 Headphones',
     brand: 'Sony',
     description: 'Industry-leading noise cancellation, 30hr battery',
@@ -54,6 +57,7 @@ const sampleProducts = [
     isFeatured: true,
   },
   {
+    _id: '65d1a2b3c4d5e6f7a8b9c004',
     name: 'Nike Air Max 270 Running Shoes',
     brand: 'Nike',
     description: 'Air cushioning, breathable mesh upper',
@@ -68,6 +72,7 @@ const sampleProducts = [
     isFeatured: false,
   },
   {
+    _id: '65d1a2b3c4d5e6f7a8b9c005',
     name: 'MacBook Air M3 13-inch 8GB 256GB',
     brand: 'Apple',
     description: 'Apple M3 chip, 18hr battery life, Liquid Retina display',
@@ -82,6 +87,7 @@ const sampleProducts = [
     isFeatured: true,
   },
   {
+    _id: '65d1a2b3c4d5e6f7a8b9c006',
     name: 'LG 1.5 Ton 5-Star Inverter AC',
     brand: 'LG',
     description: '5-star BEE rated, dual inverter, auto clean',
@@ -96,6 +102,7 @@ const sampleProducts = [
     isFeatured: false,
   },
   {
+    _id: '65d1a2b3c4d5e6f7a8b9c007',
     name: 'Fossil Gen 6 Smartwatch',
     brand: 'Fossil',
     description: 'Wear OS, heart rate, GPS, 1.28" AMOLED display',
@@ -110,6 +117,7 @@ const sampleProducts = [
     isFeatured: false,
   },
   {
+    _id: '65d1a2b3c4d5e6f7a8b9c008',
     name: 'Nescafé Gold Blend 200g',
     brand: 'Nestlé',
     description: 'Premium coffee blend, smooth & balanced taste',
@@ -124,6 +132,7 @@ const sampleProducts = [
     isFeatured: false,
   },
   {
+    _id: '65d1a2b3c4d5e6f7a8b9c009',
     name: 'Ergonomic Office Chair',
     brand: 'Herman Miller',
     description: 'Lumbar support, adjustable armrests, breathable mesh back',
@@ -138,6 +147,7 @@ const sampleProducts = [
     isFeatured: false,
   },
   {
+    _id: '65d1a2b3c4d5e6f7a8b9c010',
     name: 'OnePlus 12R 5G 256GB',
     brand: 'OnePlus',
     description: 'Snapdragon 8 Gen 2, 100W SUPERVOOC, 50MP camera',
@@ -152,6 +162,7 @@ const sampleProducts = [
     isFeatured: true,
   },
   {
+    _id: '65d1a2b3c4d5e6f7a8b9c011',
     name: 'Maybelline Fit Me Foundation',
     brand: 'Maybelline',
     description: 'Natural finish, 40 shades, oil control',
@@ -166,6 +177,7 @@ const sampleProducts = [
     isFeatured: false,
   },
   {
+    _id: '65d1a2b3c4d5e6f7a8b9c012',
     name: 'LEGO Technic McLaren Formula 1',
     brand: 'LEGO',
     description: '1:8 scale, 1432 pieces, movable parts',
@@ -180,6 +192,7 @@ const sampleProducts = [
     isFeatured: false,
   },
   {
+    _id: '65d1a2b3c4d5e6f7a8b9c013',
     name: 'Adidas Ultraboost 23 Shoes',
     brand: 'Adidas',
     description: 'BOOST midsole, Primeknit+ upper, Linear Energy Push',
@@ -194,6 +207,7 @@ const sampleProducts = [
     isFeatured: false,
   },
   {
+    _id: '65d1a2b3c4d5e6f7a8b9c014',
     name: 'Instant Pot Duo 7-in-1 5.7L',
     brand: 'Instant Pot',
     description: 'Pressure cooker, slow cooker, rice cooker & more',
@@ -208,6 +222,7 @@ const sampleProducts = [
     isFeatured: false,
   },
   {
+    _id: '65d1a2b3c4d5e6f7a8b9c015',
     name: 'Canon EOS R50 Mirrorless Camera',
     brand: 'Canon',
     description: '24.2MP APS-C sensor, 4K video, Dual Pixel AF',
@@ -222,6 +237,7 @@ const sampleProducts = [
     isFeatured: false,
   },
   {
+    _id: '65d1a2b3c4d5e6f7a8b9c016',
     name: 'boAt Airdopes 141 TWS Earbuds',
     brand: 'boAt',
     description: '42hr total playback, ENx tech, Instacharge',
@@ -236,6 +252,22 @@ const sampleProducts = [
     isFeatured: false,
   },
   {
+    _id: '65d1a2b3c4d5e6f7a8b9c017',
+    name: 'Apple iPhone 15 Pro Max 256GB',
+    brand: 'Apple',
+    description: 'A17 Pro chip, 48MP camera system, titanium design',
+    price: 134900,
+    originalPrice: 159900,
+    image: 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=400&q=80',
+    category: 'Mobiles',
+    stock: 45,
+    discount: 16,
+    rating: 4.8,
+    tags: ['mobiles', 'apple', 'iphone', 'bestseller'],
+    isFeatured: true,
+  },
+  {
+    _id: '65d1a2b3c4d5e6f7a8b9c018',
     name: 'Samsung Galaxy S24 Ultra 5G',
     brand: 'Samsung',
     description: 'Snapdragon 8 Gen 3, 200MP camera, built-in S Pen, AI features',
@@ -250,6 +282,7 @@ const sampleProducts = [
     isFeatured: true,
   },
   {
+    _id: '65d1a2b3c4d5e6f7a8b9c019',
     name: 'Mens Classic Leather Jacket',
     brand: 'Levis',
     description: 'Premium real leather jacket with clean biker design and zipper pockets',
@@ -264,6 +297,7 @@ const sampleProducts = [
     isFeatured: true,
   },
   {
+    _id: '65d1a2b3c4d5e6f7a8b9c020',
     name: 'Mens Slim Fit Casual Chinos',
     brand: 'Zara',
     description: 'Stretchable cotton slim-fit chinos for smart casual office wear',
@@ -278,6 +312,7 @@ const sampleProducts = [
     isFeatured: false,
   },
   {
+    _id: '65d1a2b3c4d5e6f7a8b9c021',
     name: 'Womens Floral Summer A-Line Dress',
     brand: 'H&M',
     description: 'Breathable chiffon fabric summer dress with beautiful floral printing',
@@ -292,6 +327,7 @@ const sampleProducts = [
     isFeatured: true,
   },
   {
+    _id: '65d1a2b3c4d5e6f7a8b9c022',
     name: 'Womens Luxury Leather Handbag',
     brand: 'Michael Kors',
     description: 'Saffiano leather handbag with gold-tone hardware and chain straps',
@@ -306,6 +342,7 @@ const sampleProducts = [
     isFeatured: false,
   },
   {
+    _id: '65d1a2b3c4d5e6f7a8b9c023',
     name: 'Organic California Almonds 500g',
     brand: 'Happilo',
     description: 'Raw whole raw almonds rich in protein, fiber, and healthy fats',

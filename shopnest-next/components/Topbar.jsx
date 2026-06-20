@@ -50,10 +50,7 @@ export default function Topbar() {
                 Login
               </button>
             )}
-            
-            <a href="#" className="become-seller-link" onClick={(e) => { e.preventDefault(); dispatch({ type: 'SHOW_TOAST', message: 'Seller registration is coming soon!' }); }}>
-              Become a Seller
-            </a>
+
 
             <button className="nav-btn-cart" onClick={() => {
               dispatch({ type: 'TOGGLE_CART' });
